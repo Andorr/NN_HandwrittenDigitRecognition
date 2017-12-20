@@ -1,16 +1,14 @@
 package NeuralNetwork;
 
-
-import ReadAndWrite.SaveAndLoad;
-
 import java.io.File;
+import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args){
-        NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},0);
-        //NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
-        handwrittenDigitsTraining(nn);
+        //NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},0);
+        NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
+        //handwrittenDigitsTraining(nn);
         handwrittenDigitsTesting(nn);
     }
 
@@ -51,14 +49,16 @@ public class Main {
         int curFolder = 0;
         int curFileIndex = 0;
         int iteration = 0;
-        while(iteration != 1000000){
+        final int totalIterations = 1000000;
+        final Random random = new Random();
+        while(iteration != totalIterations){
             String filename = getNextFileName(curFolder,curFileIndex,true);
             float[] image = ImageController.readImagePixels1D(filename);
             float[] expected = new float[]{0,0,0,0,0,0,0,0,0,0};
             expected[curFolder] = 1;
             nn.train(image,expected);
-            curFolder = (int)((float)Math.random()*9);
-            curFileIndex = (int)((float)Math.random()*5400);
+            curFolder = random.nextInt(10);
+            curFileIndex = random.nextInt(5400);
             iteration++;
         }
         SaveAndLoad.writeObject(nn,"nn");
@@ -68,13 +68,14 @@ public class Main {
         //Testing
         System.out.println("Starting to test");
         int iteration = 0;
-        int totalIterations = 10000;
+        final int totalIterations = 20000;
         int correctAnswers = 0;
         int curFolder;
         int curFileIndex;
+        final Random random = new Random();
         while(iteration != totalIterations){
-            curFolder = (int)((float)Math.random()*9);
-            curFileIndex = (int)((float)Math.random()*800);
+            curFolder = random.nextInt(10);
+            curFileIndex = random.nextInt(800);
             String filename = getNextFileName(curFolder,curFileIndex,false);
             float[] image = ImageController.readImagePixels1D(filename);
             float[] result = nn.feed(image);
@@ -85,7 +86,7 @@ public class Main {
             iteration++;
         }
         float accuracy = (float)correctAnswers/(float)totalIterations;
-        System.out.println("Accuracy: " + accuracy);
+        System.out.println("Accuracy: " + accuracy + "\nCorrect Answers: " + correctAnswers + "\\" + totalIterations);
     }
 
     //----Helper Functions----
