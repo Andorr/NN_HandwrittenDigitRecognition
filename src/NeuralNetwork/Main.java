@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args){
         //NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},0);
         NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
-        //handwrittenDigitsTraining(nn);
+        //handwrittenDigitsTraining(nn,false);
         handwrittenDigitsTesting(nn);
     }
 
@@ -43,7 +43,7 @@ public class Main {
         System.out.println(nn.feed(new float[]{1,1})[0]);
     }
 
-    private static void handwrittenDigitsTraining(NeuralNetwork nn){
+    private static void handwrittenDigitsTraining(NeuralNetwork nn,boolean saveToFile){
         //Training
         System.out.println("Starting to train");
         int curFolder = 0;
@@ -61,7 +61,11 @@ public class Main {
             curFileIndex = random.nextInt(5400);
             iteration++;
         }
-        SaveAndLoad.writeObject(nn,"nn");
+
+        if(saveToFile){
+            SaveAndLoad.writeObject(nn,"nn");
+        }
+
     }
 
     private static void handwrittenDigitsTesting(NeuralNetwork nn){
