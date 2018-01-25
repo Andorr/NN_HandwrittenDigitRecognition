@@ -6,15 +6,14 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args){
-        
-        //NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},0);
-        NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
 
+        NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},NeuralNetwork.TANH);
+        //NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
+        handwrittenDigitsTraining(nn,20000,false);
         long start = System.currentTimeMillis();
-        //handwrittenDigitsTraining(nn,1000000,false);
         handwrittenDigitsTesting(nn,20000);
         long result = System.currentTimeMillis()-start;
-        System.out.println("Duration: " + result + "ms");
+        System.out.println("TANH Duration: " + result + "ms\n-------------------\n");
     }
 
     private static void xorTest(NeuralNetwork nn){

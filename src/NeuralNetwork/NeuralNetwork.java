@@ -4,8 +4,9 @@ public class NeuralNetwork implements java.io.Serializable{
 
     private static final float LEARNING_RATE = 0.033333f;
     private final int FUNCTION;
-    private static final int TANH = 0;
-    private static final int SIGMOID = 1;
+    protected static final int TANH = 0;
+    protected static final int SIGMOID = 1;
+    protected static final int RELU = 2;
 
     private float[][] inputs; //Every layer's inputs
     private float[][] outputs; //Every layer's output
@@ -58,7 +59,7 @@ public class NeuralNetwork implements java.io.Serializable{
             for(int k = 0; k < numOfInputs[layerIndex]; k++){
                 outputs[layerIndex][j] += inputs[layerIndex][k]*weights[layerIndex][j][k]; //Adds all the inputs*weights to the neuron
             }
-            outputs[layerIndex][j] = map(outputs[layerIndex][j]); //Maps the value with the selected mapping-function
+            outputs[layerIndex][j] = activationFunction(outputs[layerIndex][j]); //Maps the value with the selected mapping-function
         }
     }
 
@@ -121,12 +122,14 @@ public class NeuralNetwork implements java.io.Serializable{
     }
 
     //Maps values with either tanH or sigmoid
-    private float map(float value){
+    private float activationFunction(float value){
         switch (FUNCTION){
             case NeuralNetwork.TANH: //TanH (hyperbolic tangent)
                 return (float)Math.tanh(value);
-            default: //Sigmoid
+            case NeuralNetwork.SIGMOID: //Sigmoid
                 return sigmoid(value);
+            default: //RELU
+                return Math.max(0,value);
         }
     }
 
@@ -135,8 +138,10 @@ public class NeuralNetwork implements java.io.Serializable{
         switch (FUNCTION){
             case NeuralNetwork.TANH: //Derivative of TanH
                 return 1f-(value*value);
-            default: //Derivative of the Sigmoid-function
+            case NeuralNetwork.SIGMOID: //Derivative of the Sigmoid-function
                 return (float)(1-Math.pow(sigmoid(value),2));
+            default: //Derivative of the RELU-function
+                return (float)((value > 0)? 1 : 0);
         }
     }
 
