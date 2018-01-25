@@ -6,10 +6,15 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args){
+        
         //NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},0);
         NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
-        //handwrittenDigitsTraining(nn,false);
-        handwrittenDigitsTesting(nn);
+
+        long start = System.currentTimeMillis();
+        //handwrittenDigitsTraining(nn,1000000,false);
+        handwrittenDigitsTesting(nn,20000);
+        long result = System.currentTimeMillis()-start;
+        System.out.println("Duration: " + result + "ms");
     }
 
     private static void xorTest(NeuralNetwork nn){
@@ -43,13 +48,13 @@ public class Main {
         System.out.println(nn.feed(new float[]{1,1})[0]);
     }
 
-    private static void handwrittenDigitsTraining(NeuralNetwork nn,boolean saveToFile){
+    private static void handwrittenDigitsTraining(NeuralNetwork nn,int iterations,boolean saveToFile){
         //Training
         System.out.println("Starting to train");
         int curFolder = 0;
         int curFileIndex = 0;
         int iteration = 0;
-        final int totalIterations = 1000000;
+        final int totalIterations = iterations;
         final Random random = new Random();
         while(iteration != totalIterations){
             String filename = getNextFileName(curFolder,curFileIndex,true);
@@ -68,11 +73,11 @@ public class Main {
 
     }
 
-    private static void handwrittenDigitsTesting(NeuralNetwork nn){
+    private static void handwrittenDigitsTesting(NeuralNetwork nn,int iterations){
         //Testing
         System.out.println("Starting to test");
         int iteration = 0;
-        final int totalIterations = 20000;
+        final int totalIterations = iterations;
         int correctAnswers = 0;
         int curFolder;
         int curFileIndex;
