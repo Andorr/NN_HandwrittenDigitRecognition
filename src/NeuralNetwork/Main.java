@@ -7,13 +7,14 @@ public class Main {
 
     public static void main(String[] args){
 
-        NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,10},NeuralNetwork.TANH);
+        NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,35,10},NeuralNetwork.TANH);
         //NeuralNetwork nn = (NeuralNetwork)SaveAndLoad.readObject("nn");
         handwrittenDigitsTraining(nn,20000,false);
         long start = System.currentTimeMillis();
         handwrittenDigitsTesting(nn,20000);
         long result = System.currentTimeMillis()-start;
         System.out.println("TANH Duration: " + result + "ms\n-------------------\n");
+
     }
 
     private static void xorTest(NeuralNetwork nn){
@@ -64,6 +65,11 @@ public class Main {
             curFolder = random.nextInt(10);
             curFileIndex = random.nextInt(5400);
             iteration++;
+
+            if(iteration%10000 == 0){
+               printLoadingBar(iteration,totalIterations);
+
+            }
         }
 
         if(saveToFile){
@@ -74,7 +80,7 @@ public class Main {
 
     private static void handwrittenDigitsTesting(NeuralNetwork nn,int iterations){
         //Testing
-        System.out.println("Starting to test");
+        System.out.println("\nStarting to test");
         int iteration = 0;
         final int totalIterations = iterations;
         int correctAnswers = 0;
@@ -92,9 +98,12 @@ public class Main {
                 correctAnswers++;
             }
             iteration++;
+            if(iteration%100 == 0){
+                printLoadingBar(iteration,totalIterations);
+            }
         }
         float accuracy = (float)correctAnswers/(float)totalIterations;
-        System.out.println("Accuracy: " + accuracy + "\nCorrect Answers: " + correctAnswers + "\\" + totalIterations);
+        System.out.println("\nAccuracy: " + accuracy + "\nCorrect Answers: " + correctAnswers + "\\" + totalIterations);
     }
 
     //----Helper Functions----
@@ -121,5 +130,16 @@ public class Main {
             }
         }
         return index;
+    }
+
+    private static void printLoadingBar(int curVal,int maxVal){
+        final int SIZE = 20;
+        double percent = ((double)curVal/(double)maxVal);
+        int curProgress = (int)(percent*SIZE);
+        String bar = "\rProgress: ||";
+        for(int i = 0; i < SIZE; i++){
+            bar += (i < curProgress)? "=" : "-";
+        }
+        System.out.print(bar + "|| " + (percent*100) + "%");
     }
 }

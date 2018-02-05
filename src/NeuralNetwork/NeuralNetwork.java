@@ -2,7 +2,7 @@ package NeuralNetwork;
 
 public class NeuralNetwork implements java.io.Serializable{
 
-    private static final float LEARNING_RATE = 0.033333f;
+    private float LEARNING_RATE = 0.033333f;
     private final int FUNCTION;
     protected static final int TANH = 0;
     protected static final int SIGMOID = 1;
@@ -14,6 +14,8 @@ public class NeuralNetwork implements java.io.Serializable{
     private int[] numOfOutputs; //Every layer's number of outputs
     private int[] numOfInputs; //Every layer's number of inputs
 
+    private float[][] biases;
+
     public NeuralNetwork(int[] layers, int function){
         checkValidLayerInput(layers); //Check if input is a valid layer-input
         FUNCTION = function;
@@ -24,12 +26,17 @@ public class NeuralNetwork implements java.io.Serializable{
         weights = new float[layers.length-1][][];
         numOfInputs = new int[layers.length-1];
         numOfOutputs = new int[layers.length-1];
+
+        biases = new float[layers.length-1][];
+
         for(int i = 0; i < layers.length-1; i++){
             inputs[i] = new float[layers[i]];
             outputs[i] = new float[layers[i+1]];
             weights[i] = new float[layers[i+1]][layers[i]];
             numOfOutputs[i] = layers[i+1];
             numOfInputs[i] = layers[i];
+
+            biases[i] = new float[layers[i+1]];
         }
 
         initializeWeights(); //Randomizes the weights
@@ -59,7 +66,7 @@ public class NeuralNetwork implements java.io.Serializable{
             for(int k = 0; k < numOfInputs[layerIndex]; k++){
                 outputs[layerIndex][j] += inputs[layerIndex][k]*weights[layerIndex][j][k]; //Adds all the inputs*weights to the neuron
             }
-            outputs[layerIndex][j] = activationFunction(outputs[layerIndex][j]); //Maps the value with the selected mapping-function
+            outputs[layerIndex][j] = activationFunction(outputs[layerIndex][j] + biases[layerIndex][j]); //Maps the value with the selected mapping-function
         }
     }
 
@@ -98,6 +105,11 @@ public class NeuralNetwork implements java.io.Serializable{
                     weightsDelta[i][j][k] = gamma[i][j]*inputs[i][k];
                 }
             }
+
+            //Updates the biases
+            for(int j = 0; j < numOfOutputs[i]; j++){
+                biases[i][j] -= gamma[i][j]*1*LEARNING_RATE;
+            }
         }
 
         //Updates the weights
@@ -117,6 +129,7 @@ public class NeuralNetwork implements java.io.Serializable{
                 for (int k = 0; k < weights[i][j].length; k++) {
                     weights[i][j][k] = (float)Math.random()-0.5f;
                 }
+                biases[i][j] = (float)Math.random()-0.5f;
             }
         }
     }
@@ -202,5 +215,10 @@ public class NeuralNetwork implements java.io.Serializable{
         if(expected.length != outputs[outputs.length-1].length){
             throw new IllegalArgumentException("Expected input length is incorrect! Correct length is: " + outputs[outputs.length-1].length + ", but current length is " + expected.length + ".");
         }
+    }
+
+    //-----Custom Preferences-----
+    public void setLearningRate(float learningRate){
+        LEARNING_RATE = learningRate;
     }
 }
