@@ -3,7 +3,7 @@ A Simple Neural Network
 
 This is an implemention of a nerual network for recognizing handwritten digits.
 
-### Example
+### Example - Testing the Neural Network on an and-test.
 ```Java
 NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,35,10},NeuralNetwork.TANH);
 
