@@ -3,9 +3,9 @@ A Simple Neural Network
 
 This is an implemention of a nerual network for recognizing handwritten digits.
 
-### Example - Testing the Neural Network on an and-test.
+### Example - Testing the Neural Network on and-logic.
 ```Java
-NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,35,10},NeuralNetwork.TANH);
+NeuralNetwork nn = new NeuralNetwork(new int[]{2,10,10,1},NeuralNetwork.TANH);
 
 //Training
 for(int i = 0; i < 5000; i++){
