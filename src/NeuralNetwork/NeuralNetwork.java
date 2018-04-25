@@ -2,6 +2,8 @@ package NeuralNetwork;
 
 public class NeuralNetwork implements java.io.Serializable{
 
+    private static final long serialVersionUID = 838478294676571L;
+
     private float LEARNING_RATE = 0.033333f;
     private final int FUNCTION;
     protected static final int TANH = 0;

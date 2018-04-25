@@ -1,5 +1,7 @@
 package NeuralNetwork;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class SaveAndLoad {
@@ -33,6 +35,18 @@ public class SaveAndLoad {
         catch(IOException | ClassNotFoundException e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static boolean saveImage(BufferedImage image,String fileName){
+        try{
+            File file = new File(fileName + ".png");
+            ImageIO.write(image,"png",file);
+            return true;
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            return false;
         }
     }
 }
