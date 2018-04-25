@@ -22,3 +22,14 @@ System.out.println(nn.feed(new float[]{1,0})[0]);
 System.out.println(nn.feed(new float[]{1,1})[0]);
 
 ```
+
+### Example - HandwrittenDigitRecognition
+```Java
+NeuralNetwork nn = new NeuralNetwork(new int[]{28*28,35,35,35,10},NeuralNetwork.TANH);
+
+
+String filename = "myHandwrittenDigit.png";
+float[] image = ImageController.readImagePixels1D(filename); //Converts pixels from image to 1D-float array of grayscale values
+float[] expected = new float[]{0,1,0,0,0,0,0,0,0,0}; //Right answer is the digit 1
+nn.train(image,expected);
+```
